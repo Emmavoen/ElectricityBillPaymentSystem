@@ -11,6 +11,6 @@ namespace ElectricityBillPaymentSystem.Application.Contracts.Service
     public interface IWalletService
     {
         Task<WalletResponseDto> CreateWallet();
-        Task<string> AddFunds(int walletId, decimal amount);
+        Task<string> AddFunds(int walletId, decimal amount, string phoneNumber);
     }
 }

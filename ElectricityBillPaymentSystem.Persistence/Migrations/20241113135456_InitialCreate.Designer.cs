@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElectricityBillPaymentSystem.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241111230809_InitialCreate")]
+    [Migration("20241113135456_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,12 +35,7 @@ namespace ElectricityBillPaymentSystem.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("int");
 
-                    b.Property<int>("WalletId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("WalletId");
 
                     b.ToTable("Bills");
                 });
@@ -59,22 +54,6 @@ namespace ElectricityBillPaymentSystem.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Wallets");
-                });
-
-            modelBuilder.Entity("ElectricityBillPaymentSystem.Domain.Entities.Bill", b =>
-                {
-                    b.HasOne("ElectricityBillPaymentSystem.Domain.Entities.Wallet", "Wallet")
-                        .WithMany("Bills")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Wallet");
-                });
-
-            modelBuilder.Entity("ElectricityBillPaymentSystem.Domain.Entities.Wallet", b =>
-                {
-                    b.Navigation("Bills");
                 });
 #pragma warning restore 612, 618
         }

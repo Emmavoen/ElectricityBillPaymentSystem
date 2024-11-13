@@ -12,10 +12,7 @@ namespace ElectricityBillPaymentSystem.Persistence.Configurations
             builder.Property(b => b.Amount).IsRequired().HasPrecision(18, 2);
             builder.Property(b => b.Status).IsRequired().HasMaxLength(20);
 
-            builder.HasOne(b => b.Wallet)
-                   .WithMany(w => w.Bills)
-                   .HasForeignKey(b => b.WalletId)
-                   .OnDelete(DeleteBehavior.Cascade);
+        
         }
 
         

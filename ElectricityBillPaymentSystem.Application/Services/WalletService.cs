@@ -2,10 +2,6 @@
 using ElectricityBillPaymentSystem.Application.Contracts.Service;
 using ElectricityBillPaymentSystem.Application.Dtos;
 using ElectricityBillPaymentSystem.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ElectricityBillPaymentSystem.Application.Services
@@ -15,7 +11,7 @@ namespace ElectricityBillPaymentSystem.Application.Services
         private readonly IEventPublisher _eventPublisher;
         private readonly IWalletRepository _walletRepository;
         private readonly ISmsService _smsService;
-        private const decimal LowBalanceThreshold = 50.0M;
+        private const decimal LowBalanceThreshold = 1000;
 
         public WalletService(IEventPublisher eventPublisher, IWalletRepository walletRepository, ISmsService SmsService)
         {
@@ -40,12 +36,17 @@ namespace ElectricityBillPaymentSystem.Application.Services
             return response;
         }
 
-        public async Task<string> AddFunds(int walletId, decimal amount)
+        public async Task<string> AddFunds(int walletId, decimal amount, string phoneNumber)
         {
             var walletExist = await _walletRepository.GetByColumnAsync(x => x.Id == walletId);
             if (walletExist == null)
             {
-                return  "Wallet not Found";
+                {
+
+                    walletExist = new Wallet {  Balance = 0 };
+                    await _walletRepository.AddAsync(walletExist);
+
+                }
             }
 
             walletExist.Balance += amount;
@@ -53,11 +54,11 @@ namespace ElectricityBillPaymentSystem.Application.Services
             // Check if wallet balance falls below the threshold after adding funds
             if (walletExist.Balance < LowBalanceThreshold)
             {
-                await _smsService.SendSmsAsync("phoneNumber", "Warning: Your wallet balance is low.");
+                await _smsService.SendSmsAsync(phoneNumber, "Warning: Your wallet balance is low.");
             }
             return "Funds Added Successfully";
         }
 
-        
+
     }
 }

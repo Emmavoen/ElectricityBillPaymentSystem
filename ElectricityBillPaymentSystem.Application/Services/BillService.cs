@@ -25,14 +25,14 @@ namespace ElectricityBillPaymentSystem.Application.Services
         }
 
 
-        public async Task<Bill> CreateBillAsync(int walletId, decimal amount, string phoneNumber)
+        public async Task<Bill> CreateBillAsync( decimal amount, string phoneNumber)
         {
             var bill = new Bill
             {
                 
                 Amount = amount,
                 Status = Status.Pending,
-                WalletId = walletId
+                
             };
             await _billRepository.AddAsync(bill);
             // Send SMS Notification
@@ -45,7 +45,7 @@ namespace ElectricityBillPaymentSystem.Application.Services
             return bill;
         }
 
-        public async Task<string> ProcessPaymentAsync(int billId, string phoneNumber)
+        public async Task<string> ProcessPaymentAsync(int billId, int walletId, string phoneNumber)
         {
 
             var bill = await _billRepository.GetByColumnAsync(x => x.Id == billId);
@@ -58,7 +58,7 @@ namespace ElectricityBillPaymentSystem.Application.Services
                 return "Bill is already paid";
             }
 
-            var wallet = await _walletRepository.GetByColumnAsync(x => x.Id == bill.WalletId);
+            var wallet = await _walletRepository.GetByColumnAsync(x => x.Id == walletId);
             if(wallet == null)
             {
                 return "Wallet not found";

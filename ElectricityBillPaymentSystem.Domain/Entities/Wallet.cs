@@ -11,7 +11,7 @@ namespace ElectricityBillPaymentSystem.Domain.Entities
         public int Id { get; set; }
         public decimal Balance { get; set; }
 
-        public ICollection<Bill> Bills { get; set; }
+        //public ICollection<Bill> Bills { get; set; }
 
 
         
